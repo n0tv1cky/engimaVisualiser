@@ -1,4 +1,5 @@
 class Keyboard:
+
     def forward(self, letter):
         signal = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".find(letter)
         return signal

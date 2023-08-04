@@ -20,8 +20,3 @@ class Plugboard:
         letter = self.left[signal]
         signal = self.right.find(letter)
         return signal
-
-
-p = Plugboard(["AF", "CX"])
-print(p.forward(0))
-print(p.backward(1))
