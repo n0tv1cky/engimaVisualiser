@@ -1,10 +1,7 @@
-from keyboard import Keyboard
+from keyboards import Keyboard
 from plugboard import Plugboard
 from rotor import Rotor
 from reflector import Reflector
-
-
-k = Keyboard()
 
 I = Rotor("EKMFLGDQVZNTOWYHXUSPAIBRCJ", "Q")
 II = Rotor("AJDKSIRUXBLHWTMCQGZNPYFVOE", "E")
@@ -18,6 +15,7 @@ C = Reflector("FVPJIAOYEDRZXWGCTKUQSBNMHL")
 KB = Keyboard()
 PB = Plugboard(["AR", "GK", "OX"])
 
+'''
 letter = "A"
 signal = KB.forward(letter)
 signal = PB.forward(signal)
@@ -31,3 +29,8 @@ signal = III.backward(signal)
 signal = PB.backward(signal)
 letter = KB.backward(signal)
 print(letter)
+'''
+
+I.show()
+I.rotateToLetter("G")
+I.show()

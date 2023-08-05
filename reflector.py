@@ -7,3 +7,8 @@ class Reflector:
         letter = self.right[signal]
         signal = self.left.find(letter)
         return signal
+
+    def show(self):
+        print(self.left)
+        print(self.right)
+        print()
