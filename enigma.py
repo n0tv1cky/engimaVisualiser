@@ -33,15 +33,36 @@ class Enigma:
         else:
             self.iii.rotate()
 
+        path = []
         signal = self.kb.forward(letter)
+        path = [signal, signal]
         signal = self.pb.forward(signal)
+        path.append(signal)
+        path.append(signal)
         signal = self.iii.forward(signal)
+        path.append(signal)
+        path.append(signal)
         signal = self.ii.forward(signal)
+        path.append(signal)
+        path.append(signal)
         signal = self.i.forward(signal)
+        path.append(signal)
+        path.append(signal)
+        path.append(signal)
         signal = self.re.reflect(signal)
+        path.append(signal)
+        path.append(signal)
         signal = self.i.backward(signal)
+        path.append(signal)
+        path.append(signal)
         signal = self.ii.backward(signal)
+        path.append(signal)
+        path.append(signal)
         signal = self.iii.backward(signal)
+        path.append(signal)
+        path.append(signal)
         signal = self.pb.backward(signal)
+        path.append(signal)
+        path.append(signal)
         letter = self.kb.backward(signal)
-        return letter
+        return path, letter

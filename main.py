@@ -20,8 +20,12 @@ bold = pygame.font.SysFont("FreeMono", 25, bold=True)
 width = 1600
 height = 900
 screen = pygame.display.set_mode((width, height))
-margins = {"top":200, "bottom":100, "left":100, "right":100}
+margins = {"top": 200, "bottom": 100, "left": 100, "right": 100}
 gap = 80
+
+input = ""
+output = ""
+path = []
 
 # Rotor settings
 i = Rotor("EKMFLGDQVZNTOWYHXUSPAIBRCJ", "Q")
@@ -53,7 +57,19 @@ enigma.setRings((1, 1, 1))
 animating = True
 while animating:
     screen.fill("#333333")
-    draw(enigma, screen, width, height, margins, gap, bold)
+
+    # text input
+    text = mono.render(input, True, "grey")
+    text_box = text.get_rect(center=(width/2, margins["top"]/2))
+    screen.blit(text, text_box)
+
+    # text output
+    text = bold.render(output, True, "white")
+    text_box = text.get_rect(center=(width/2, margins["top"]/2+25))
+    screen.blit(text, text_box)
+
+    # draw enigma machine
+    draw(enigma, path, screen, width, height, margins, gap, bold)
     pygame.display.flip()
 
     # track user input
@@ -63,3 +79,15 @@ while animating:
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_DOWN:
                 ii.rotate()
+            elif event.key == pygame.K_SPACE:
+                input += " "
+                output += " "
+            elif event.key == pygame.K_BACKSPACE:
+                input = input[:-1]
+                output = output[:-1]
+            key = event.unicode
+            if key in "abcdefghijklmnopqrstuvwxyz":
+                letter = key.upper()
+                input += letter
+                path, cipher = enigma.encrypt(letter)
+                output += cipher
