@@ -2,35 +2,31 @@ from keyboards import Keyboard
 from plugboard import Plugboard
 from rotor import Rotor
 from reflector import Reflector
+from enigma import Enigma
 
-I = Rotor("EKMFLGDQVZNTOWYHXUSPAIBRCJ", "Q")
-II = Rotor("AJDKSIRUXBLHWTMCQGZNPYFVOE", "E")
-III = Rotor("BDFHJLCPRTXVZNYEIWGAKMUSQO", "V")
-IV = Rotor("ESOVPZJAYQUIRHXLNFTGKDCMWB", "J")
-V = Rotor("VZBRGITYUPSDNHLXAWMJQOFECK", "Z")
+# Rotor settings
+i = Rotor("EKMFLGDQVZNTOWYHXUSPAIBRCJ", "Q")
+ii = Rotor("AJDKSIRUXBLHWTMCQGZNPYFVOE", "E")
+iii = Rotor("BDFHJLCPRTXVZNYEIWGAKMUSQO", "V")
+iv = Rotor("ESOVPZJAYQUIRHXLNFTGKDCMWB", "J")
+v = Rotor("VZBRGITYUPSDNHLXAWMJQOFECK", "Z")
 
-A = Reflector("EJMZALYXVBWFCRQUONTSPIKHGD")
-B = Reflector("YRUHQSLDPXNGOKMIEBFZCWVJAT")
-C = Reflector("FVPJIAOYEDRZXWGCTKUQSBNMHL")
-KB = Keyboard()
-PB = Plugboard(["AR", "GK", "OX"])
+# Reflector settings
+a = Reflector("EJMZALYXVBWFCRQUONTSPIKHGD")
+b = Reflector("YRUHQSLDPXNGOKMIEBFZCWVJAT")
+c = Reflector("FVPJIAOYEDRZXWGCTKUQSBNMHL")
 
-'''
-letter = "A"
-signal = KB.forward(letter)
-signal = PB.forward(signal)
-signal = III.forward(signal)
-signal = II.forward(signal)
-signal = I.forward(signal)
-signal = A.reflect(signal)
-signal = I.backward(signal)
-signal = II.backward(signal)
-signal = III.backward(signal)
-signal = PB.backward(signal)
-letter = KB.backward(signal)
-print(letter)
-'''
+# Plugboard settings
+pb = Plugboard(["AB", "CD", "EF"])
+kb = Keyboard()
 
-I.show()
-I.rotateToLetter("G")
-I.show()
+enigma = Enigma(b, iv, ii, i, pb, kb)
+# print(enigma.encrypt("A"))
+enigma.setKey("CAT")
+enigma.setRings((5,26,2))
+
+message = "TESTINGTESTINGTESTINGTESTING"
+ciphertext = ""
+for letter in message:
+    ciphertext += enigma.encrypt(letter)
+print(ciphertext)
