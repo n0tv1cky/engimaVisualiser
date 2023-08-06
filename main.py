@@ -23,7 +23,7 @@ screen = pygame.display.set_mode((width, height))
 margins = {"top": 200, "bottom": 100, "left": 100, "right": 100}
 gap = 80
 
-input = ""
+input = "Enter text here"
 output = ""
 path = []
 
@@ -88,6 +88,8 @@ while animating:
             key = event.unicode
             if key in "abcdefghijklmnopqrstuvwxyz":
                 letter = key.upper()
+                if input == "Enter text here":
+                    input = ""
                 input += letter
                 path, cipher = enigma.encrypt(letter)
                 output += cipher
