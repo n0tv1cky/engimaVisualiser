@@ -48,12 +48,6 @@ enigma = Enigma(b, i, ii, iii, pb, kb)
 enigma.setKey("CAT")
 enigma.setRings((1, 1, 1))
 
-# message = "TESTINGTESTINGTESTINGTESTING"
-# ciphertext = ""
-# for letter in message:
-#     ciphertext += enigma.encrypt(letter)
-# print(ciphertext)
-
 animating = True
 while animating:
     screen.fill("#333333")
@@ -86,7 +80,7 @@ while animating:
                 input = input[:-1]
                 output = output[:-1]
             key = event.unicode
-            if key in "abcdefghijklmnopqrstuvwxyz":
+            if key in "abcdefghijklmnopqrstuvwxyz" and key.isalpha():
                 letter = key.upper()
                 if input == "Enter text here":
                     input = ""
