@@ -1,4 +1,5 @@
 import pygame
+import asyncio
 
 from keyboards import Keyboard
 from plugboard import Plugboard
@@ -12,78 +13,113 @@ pygame.init()
 pygame.font.init()
 pygame.display.set_caption("Enigma Visualiser")
 
-# creating fonts
-mono = pygame.font.SysFont("FreeMono", 25)
-bold = pygame.font.SysFont("FreeMono", 25, bold=True)
 
-# Global Variables
-width = 1600
-height = 900
-screen = pygame.display.set_mode((width, height))
-margins = {"top": 200, "bottom": 100, "left": 100, "right": 100}
-gap = 80
+def reset_enigma():
+    print("Entered")
+    global input, output, path
+    input = "Enter text here"
+    output = ""
+    path = []
+    # Rotor settings
+    i = Rotor("EKMFLGDQVZNTOWYHXUSPAIBRCJ", "Q")
+    ii = Rotor("AJDKSIRUXBLHWTMCQGZNPYFVOE", "E")
+    iii = Rotor("BDFHJLCPRTXVZNYEIWGAKMUSQO", "V")
+    iv = Rotor("ESOVPZJAYQUIRHXLNFTGKDCMWB", "J")
+    v = Rotor("VZBRGITYUPSDNHLXAWMJQOFECK", "Z")
 
-input = "Enter text here"
-output = ""
-path = []
+    # Reflector settings
+    a = Reflector("EJMZALYXVBWFCRQUONTSPIKHGD")
+    b = Reflector("YRUHQSLDPXNGOKMIEBFZCWVJAT")
+    c = Reflector("FVPJIAOYEDRZXWGCTKUQSBNMHL")
 
-# Rotor settings
-i = Rotor("EKMFLGDQVZNTOWYHXUSPAIBRCJ", "Q")
-ii = Rotor("AJDKSIRUXBLHWTMCQGZNPYFVOE", "E")
-iii = Rotor("BDFHJLCPRTXVZNYEIWGAKMUSQO", "V")
-iv = Rotor("ESOVPZJAYQUIRHXLNFTGKDCMWB", "J")
-v = Rotor("VZBRGITYUPSDNHLXAWMJQOFECK", "Z")
+    # Plugboard settings
+    pb = Plugboard(["AB", "CD", "EF"])
+    kb = Keyboard()
 
-# Reflector settings
-a = Reflector("EJMZALYXVBWFCRQUONTSPIKHGD")
-b = Reflector("YRUHQSLDPXNGOKMIEBFZCWVJAT")
-c = Reflector("FVPJIAOYEDRZXWGCTKUQSBNMHL")
+    enigma = Enigma(b, i, ii, iii, pb, kb)
+    # print(enigma.encrypt("A"))
+    enigma.setKey("CAT")
+    enigma.setRings((1, 1, 1))
 
-# Plugboard settings
-pb = Plugboard(["AB", "CD", "EF"])
-kb = Keyboard()
 
-enigma = Enigma(b, i, ii, iii, pb, kb)
-# print(enigma.encrypt("A"))
-enigma.setKey("CAT")
-enigma.setRings((1, 1, 1))
+async def main():
 
-animating = True
-while animating:
-    screen.fill("#333333")
+    # creating fonts
+    mono = pygame.font.SysFont("FreeMono", 25)
+    bold = pygame.font.SysFont("FreeMono", 25, bold=True)
 
-    # text input
-    text = mono.render(input, True, "grey")
-    text_box = text.get_rect(center=(width/2, margins["top"]/2))
-    screen.blit(text, text_box)
+    # Global Variables
+    width = 1600
+    height = 900
+    screen = pygame.display.set_mode((width, height))
+    margins = {"top": 200, "bottom": 100, "left": 100, "right": 100}
+    gap = 80
 
-    # text output
-    text = bold.render(output, True, "white")
-    text_box = text.get_rect(center=(width/2, margins["top"]/2+25))
-    screen.blit(text, text_box)
+    input = "Enter text here"
+    output = ""
+    path = []
 
-    # draw enigma machine
-    draw(enigma, path, screen, width, height, margins, gap, bold)
-    pygame.display.flip()
+    # Rotor settings
+    i = Rotor("EKMFLGDQVZNTOWYHXUSPAIBRCJ", "Q")
+    ii = Rotor("AJDKSIRUXBLHWTMCQGZNPYFVOE", "E")
+    iii = Rotor("BDFHJLCPRTXVZNYEIWGAKMUSQO", "V")
+    iv = Rotor("ESOVPZJAYQUIRHXLNFTGKDCMWB", "J")
+    v = Rotor("VZBRGITYUPSDNHLXAWMJQOFECK", "Z")
 
-    # track user input
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            animating = False
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_DOWN:
-                ii.rotate()
-            elif event.key == pygame.K_SPACE:
-                input += " "
-                output += " "
-            elif event.key == pygame.K_BACKSPACE:
-                input = input[:-1]
-                output = output[:-1]
-            key = event.unicode
-            if key in "abcdefghijklmnopqrstuvwxyz" and key.isalpha():
-                letter = key.upper()
-                if input == "Enter text here":
-                    input = ""
-                input += letter
-                path, cipher = enigma.encrypt(letter)
-                output += cipher
+    # Reflector settings
+    a = Reflector("EJMZALYXVBWFCRQUONTSPIKHGD")
+    b = Reflector("YRUHQSLDPXNGOKMIEBFZCWVJAT")
+    c = Reflector("FVPJIAOYEDRZXWGCTKUQSBNMHL")
+
+    # Plugboard settings
+    pb = Plugboard(["AB", "CD", "EF"])
+    kb = Keyboard()
+
+    enigma = Enigma(b, i, ii, iii, pb, kb)
+    # print(enigma.encrypt("A"))
+    enigma.setKey("CAT")
+    enigma.setRings((1, 1, 1))
+
+    while True:
+        screen.fill("#333333")
+
+        # text input
+        text = mono.render(input, True, "grey")
+        text_box = text.get_rect(center=(width/2, margins["top"]/2))
+        screen.blit(text, text_box)
+
+        # text output
+        text = bold.render(output, True, "white")
+        text_box = text.get_rect(center=(width/2, margins["top"]/2+25))
+        screen.blit(text, text_box)
+
+        # draw enigma machine
+        draw(enigma, path, screen, width, height, margins, gap, bold)
+        pygame.display.flip()
+
+        # track user input
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                animating = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_DOWN:
+                    ii.rotate()
+                elif event.key == pygame.K_SPACE:
+                    input += " "
+                    output += " "
+                elif event.key == pygame.K_BACKSPACE:
+                    input = input[:-1]
+                    output = output[:-1]
+                elif event.key == pygame.K_COMMA:
+                    reset_enigma()
+                key = event.unicode
+                if key in "abcdefghijklmnopqrstuvwxyz" and key.isalpha():
+                    letter = key.upper()
+                    if input == "Enter text here":
+                        input = ""
+                    input += letter
+                    path, cipher = enigma.encrypt(letter)
+                    output += cipher
+        await asyncio.sleep(0)
+
+asyncio.run(main())
